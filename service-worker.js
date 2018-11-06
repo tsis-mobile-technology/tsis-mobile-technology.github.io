@@ -28,7 +28,7 @@ importScripts('./serviceworker-cache-polyfill.js');
 // cache, then increment the CACHE_VERSION value. It will kick off the service worker update
 // flow and the old cache(s) will be purged as part of the activate event handler when the
 // updated service worker is activated.
-var CACHE_VERSION = 3;
+var CACHE_VERSION = 4;
 var CURRENT_CACHES = {
   prefetch: 'prefetch-cache-v' + CACHE_VERSION
 };
@@ -40,6 +40,14 @@ self.addEventListener('install', function(event) {
     'static/pre_fetched.txt',
     'static/pre_fetched.html',
     // This is an image that will be used in pre_fetched.html
+    'styles/main.css',
+    'index.html',
+    'serviceworker-cache-polyfill.js',
+    'images/apple-touch-icon-precomposed.png',
+    'images/favicon.ico',
+    'images/touch/chrome-touch-icon-192x192.png',
+    'images/touch/icon-128x128.png',
+    'images/touch/ms-touch-icon-144x144-precomposed.png',
     'https://www.chromium.org/_/rsrc/1302286216006/config/customLogo.gif'
   ];
 
