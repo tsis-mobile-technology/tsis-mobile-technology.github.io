@@ -39,6 +39,8 @@ limitations under the License.
 
     <link rel="icon" href="/images/favicon.ico">
 
+    <link rel="manifest" href="manifest.json">
+
     <script>
       // Service workers require HTTPS (http://goo.gl/lq4gCo). If we're running on a real web server
       // (as opposed to localhost on a custom port, which is whitelisted), then change the protocol to HTTPS.
@@ -51,6 +53,9 @@ limitations under the License.
   </head>
 
   <body>
+	<header class="header">
+		<h1 class="header__title">Touch PWA</h1>
+	</header>
     <h1>Service Worker Sample: Pre-fetching Resources During Registration</h1>
 
     <p>Available in <a href="https://www.chromestatus.com/feature/6561526227927040">Chrome 40+</a></p>
