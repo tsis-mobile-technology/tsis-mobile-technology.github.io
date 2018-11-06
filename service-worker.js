@@ -28,7 +28,7 @@ importScripts('./serviceworker-cache-polyfill.js');
 // cache, then increment the CACHE_VERSION value. It will kick off the service worker update
 // flow and the old cache(s) will be purged as part of the activate event handler when the
 // updated service worker is activated.
-var CACHE_VERSION = 1;
+var CACHE_VERSION = 2;
 var CURRENT_CACHES = {
   prefetch: 'prefetch-cache-v' + CACHE_VERSION
 };
@@ -117,6 +117,48 @@ self.addEventListener('activate', function(event) {
   );
 });
 
+/* new code */
+self.addEventListener('fetch', function(event) {
+  event.respondWith(
+    caches.match(event.request)
+      .then(function(response) {
+        // Cache hit - return response
+        if (response) {
+          return response;
+        }
+
+        // IMPORTANT: Clone the request. A request is a stream and
+        // can only be consumed once. Since we are consuming this
+        // once by cache and once by the browser for fetch, we need
+        // to clone the response.
+        var fetchRequest = event.request.clone();
+
+        return fetch(fetchRequest).then(
+          function(response) {
+            // Check if we received a valid response
+            if(!response || response.status !== 200 || response.type !== 'basic') {
+              return response;
+            }
+
+            // IMPORTANT: Clone the response. A response is a stream
+            // and because we want the browser to consume the response
+            // as well as the cache consuming the response, we need
+            // to clone it so we have two streams.
+            var responseToCache = response.clone();
+
+            caches.open(CACHE_NAME)
+              .then(function(cache) {
+                cache.put(event.request, responseToCache);
+              });
+
+            return response;
+          }
+        );
+      })
+    );
+});
+/* */
+/* old code
 self.addEventListener('fetch', function(event) {
   console.log('Handling fetch event for', event.request.url);
 
@@ -132,8 +174,6 @@ self.addEventListener('fetch', function(event) {
 
       console.log('No response found in cache. About to fetch from network...');
 
-      // event.request will always have the proper mode set ('cors, 'no-cors', etc.) so we don't
-      // have to hardcode 'no-cors' like we do when fetch()ing in the install handler.
       return fetch(event.request).then(function(response) {
         console.log('Response from network is:', response);
 
@@ -146,6 +186,8 @@ self.addEventListener('fetch', function(event) {
 
         throw error;
       });
+
     })
   );
 });
+*/
