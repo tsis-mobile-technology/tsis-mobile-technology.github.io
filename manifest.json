@@ -2,7 +2,7 @@
   "name": "Touch PWA",
   "short_name": "Touch PWA",
   "icons": [{
-      "src": "/images/icons/chrome-touch-icon-192x192.png",
+      "src": "/images/touch/chrome-touch-icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png"
     }],
